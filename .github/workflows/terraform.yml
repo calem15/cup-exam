@@ -87,22 +87,17 @@ jobs:
           mkdir -p ~/.ssh
           echo "$ANSIBLE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          sudo apt update
-          sudo apt install -y ansible python3-pip
-          pip3 install boto3 botocore
-          ansible-galaxy collection install amazon.aws
-          which python
-          python --version
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: 'false'
+
+      - name: Install boto3 and botocore in pipx environment
+        run: pipx inject ansible-core boto3 botocore
 
       - name: Run Ansible Playbook
         run: |
             cd ansible
             ansible-playbook -i inventory_aws_ec2.yml monitoring.yaml --check
         env:
-            ANSIBLE_SSH_PRIVATE_KEY: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
             ANSIBLE_HOST_KEY_CHECKING: 'false'
+            ANSIBLE_SSH_PRIVATE_KEY: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             AWS_DEFAULT_REGION: 'us-east-1'
