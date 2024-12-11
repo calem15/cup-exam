@@ -5,7 +5,7 @@ provider "aws" {
             SOURCE = "PLATFORM"
             TERRAFORM = "true"
             PROJECT = "INFRA"
-            TEST = "Testing7"
+            TEST = "Testing8"
     }
   }
 }
