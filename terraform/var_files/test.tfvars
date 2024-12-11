@@ -3,7 +3,7 @@ aws_azones = [
     "us-east-2b",
     "us-east-2c"
 ]
-cidr_block = ["10.1.0.0/16"]
+cidr_block = "10.1.0.0/16"
 aws_api_prvt_subnet = [
     "10.1.96.0/19",
     "10.1.128.0/19",
