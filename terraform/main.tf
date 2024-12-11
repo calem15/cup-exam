@@ -5,7 +5,6 @@ provider "aws" {
             SOURCE = "PLATFORM"
             TERRAFORM = "true"
             PROJECT = "INFRA"
-            KEY = "PLATFORM"
     }
   }
 }
