@@ -69,8 +69,24 @@ resource "aws_lb" "cup_alb" {
         }
 }
 
+resource "aws_lb_listener" "http_fixed_response" {
+  load_balancer_arn = aws_lb.cup_alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Service Unavailable"
+      status_code  = "200"
+    }
+  }
+}
+
 resource "aws_lb_listener_rule" "http_rule" {
-  listener_arn = aws_lb_listener.https_fixed_response.arn
+  listener_arn = aws_lb_listener.http_fixed_response.arn
   priority     = 100
 
   action {
