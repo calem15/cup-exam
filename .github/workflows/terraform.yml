@@ -57,7 +57,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -88,14 +88,19 @@ jobs:
           echo "$ANSIBLE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           sudo apt update
-          sudo apt install -y ansible
-          pip install boto3 botocore
+          sudo apt install -y ansible python3-pip
+          pip3 install boto3 botocore
+          ansible-galaxy collection install amazon.aws
         env:
-          ANSIBLE_SSH_PRIVATE_KEY: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
+          ANSIBLE_HOST_KEY_CHECKING: 'false'
 
       - name: Run Ansible Playbook
         run: |
             cd ansible
-            ansible-playbook monitoring.yaml --check
+            ansible-playbook -i inventory_aws_ec2.yml monitoring.yaml --check
         env:
+            ANSIBLE_SSH_PRIVATE_KEY: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
             ANSIBLE_HOST_KEY_CHECKING: 'false'
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_DEFAULT_REGION: 'us-east-1'
