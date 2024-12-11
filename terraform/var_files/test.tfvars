@@ -22,3 +22,5 @@ aws_web_pub_subnet = [
 cup_rds_prefix = "cup-rds-test"
 cup_db_name = "postgres"
 cup_db_user = "test"
+cup_rds_min_cap = 1
+cup_rds_max_cap = 2
