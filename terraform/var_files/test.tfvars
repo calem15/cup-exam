@@ -22,4 +22,4 @@ aws_web_pub_subnet = [
 cup_rds_prefix = "cup-rds-test"
 cup_db_name = "postgres"
 cup_db_user = "test"
-cup_db_pass = ${{ secrets.TF_VAR_DB_PASSWORD }}
+cup_db_pass = "${{ secrets.TF_VAR_DB_PASSWORD }}"
