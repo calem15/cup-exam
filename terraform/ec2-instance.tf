@@ -84,7 +84,7 @@ module "ec2_instance_prometheus" {
   key_name               = "tf-keypair"
   monitoring             = true
   vpc_security_group_ids = [aws_security_group.monitoring_sg.id]
-  subnet_id              = module.main_vpc.private_subnets.subnet_id
+  subnet_id              = module.main_vpc.private_subnets[0]
   user_data_base64       = base64encode(local.user_data)
   enable_volume_tags     = false
   iam_instance_profile   = "default-ec2-instance-profile"
