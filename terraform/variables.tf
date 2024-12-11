@@ -9,7 +9,7 @@ variable "aws_profile" {
     description = "AWS Profile to use accessing tfstate and tenants. Check your AWS profile settings."
 }
 variable "cidr_block" {
-    type = list(string)
+    type = string
     description = "CIDR block for VPC"
 }
 variable "aws_azones" {
