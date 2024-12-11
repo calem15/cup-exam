@@ -46,7 +46,7 @@ jobs:
         terraform plan --var-file ./var_files/test.tfvars --var "cup_db_pass=${{ secrets.TF_VAR_DB_PASSWORD }}"
 
   deploy:
-    name: Terraform Deploy
+    name: Provision infra and deploy Monitoring Stack
     needs: plan
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -58,10 +58,26 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Initialise project and deploy terraform
+      - name: Initialize project and deploy terraform
         run: |
           cd terraform
-          cd qa
           terraform fmt
           terraform init
           terraform plan --var-file ./var_files/test.tfvars --var "cup_db_pass=${{ secrets.TF_VAR_DB_PASSWORD }}"
+
+      - name: Preparing Stack deployment
+        run: |
+          cd ansible
+          mkdir -p ~/.ssh
+          echo "$ANSIBLE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          sudo apt update
+          sudo apt install -y ansible
+        env:
+          ANSIBLE_SSH_PRIVATE_KEY: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
+
+      - name: Run Ansible Playbook
+        run: |
+            ansible-playbook monitoring.yaml --check
+        env:
+            ANSIBLE_HOST_KEY_CHECKING: 'false'

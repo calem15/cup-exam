@@ -32,6 +32,18 @@ variable "cup_rds_prefix" {
   type = string
   description = "RDS prefix to be added to the name"
 }
+variable "cup_alb_prefix" {
+  type = string
+  description = "ALB prefix to be added to the name"
+}
+variable "cup_ec2_prefix" {
+  type = string
+  description = "EC2 prefix to be added to the name"
+}
+variable "cup_cf_prefix" {
+  type = string
+  description = "CloudFront prefix to be added to the name"
+}
 variable "cup_db_name" {default = ""}
 variable "cup_db_pass" {
   type = string
@@ -41,3 +53,8 @@ variable "cup_db_pass" {
 variable "cup_db_user" {default = ""}
 variable "cup_rds_min_cap" {}
 variable "cup_rds_max_cap" {}
+variable "grafana_int_port" {}
+variable "whitelist_ip" {
+    type = list(string)
+    description = "Whitelisted IPs"
+}

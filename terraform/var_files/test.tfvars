@@ -19,8 +19,16 @@ aws_web_pub_subnet = [
     "10.1.64.0/20",
     "10.1.80.0/20"
 ]
+whitelist_ip = [
+    "10.1.0.0/16",
+    "136.158.62.140/32"
+]
 cup_rds_prefix = "cup-rds-test"
+cup_alb_prefix = "cup-alb-test"
+cup_ec2_prefix = "cup-ec2-test"
+cup_cf_prefix = "cup-cf-test"
 cup_db_name = "postgres"
 cup_db_user = "test"
 cup_rds_min_cap = 1
 cup_rds_max_cap = 2
+grafana_int_port = 3000
