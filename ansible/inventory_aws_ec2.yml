@@ -8,7 +8,7 @@ keyed_groups:
 filters:
   instance-state-name : running
 compose:
-  ansible_host: private_ip_address
+  ansible_host: public_ip_address
 python_interpreter_defined:
   vars:
     ansible_python_interpreter: /usr/bin/python3.8
