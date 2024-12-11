@@ -91,7 +91,8 @@ jobs:
           sudo apt install -y ansible python3-pip
           pip3 install boto3 botocore
           ansible-galaxy collection install amazon.aws
-          ls -l /opt/hostedtoolcache/Python/3.9.20/x64/
+          which python
+          python --version
         env:
           ANSIBLE_HOST_KEY_CHECKING: 'false'
 
