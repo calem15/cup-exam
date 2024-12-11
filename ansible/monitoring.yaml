@@ -1,0 +1,48 @@
+---
+- name: Run monitoring stack
+  hosts: _monitoringPrometheus
+  remote_user: ec2-user
+  vars:
+    ansible_ssh_private_key_file: "tf-keypair.pem"
+  become: true
+  tasks:
+    - name: Install Docker Compose
+      shell: |
+        curl -L "https://github.com/docker/compose/releases/download/v2.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose
+
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /data/prometheus/prometheus_data
+        state: directory
+        mode: '0777'
+
+    - name: Copy docker-compose files
+      copy:
+        src: ../docker/
+        dest: /data/prometheus/
+
+    - name: Run Docker Compose
+      command: docker-compose -f /data/prometheus/docker-compose.yaml up -d
+      args:
+        chdir: /data/prometheus
+
+    - name: Verify Grafana is running
+      shell: |
+        docker ps | grep grafana
+      register: grafana_status
+      failed_when: grafana_status.stdout == ""
+      changed_when: false
+
+    - name: Verify Prometheus is running
+      shell: |
+        docker ps | grep prometheus
+      register: prometheus_status
+      failed_when: prometheus_status.stdout == ""
+      changed_when: false
+
+    - name: Verify Node Exporter is running
+      shell: |
+        docker ps | grep node_exporter
+      register: node_exporter_status
+      failed_when: node_exporter_status.stdout == ""
+      changed_when: false

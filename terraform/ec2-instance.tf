@@ -26,16 +26,28 @@ data "aws_iam_policy_document" "default-ec2-role-assume" {
 }
 
 locals {
-  name = "monitoring-infra"
+  name = "monitoring"
   user_data = <<-EOT
   #!/bin/bash
-  echo "Hello Terraform!"
-  echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC9hz2/HKXNUBGvF7FUKA+Z89ae4kSe1C0ia/DdxdDZZ5f1Iy6k3a7SaX+dVRXh5x54XuTXUSCHA4u7mMc8Q6rBNYZSHFRmsiittTSW6WjcZIxnL6zsawnIjlCSFWpxh+MUfgSSUPQKS304M08kXwruAnjmvmNod2hfCVNId4xZIVNzog+NSzyDQszFQD7uQVwZAR8vjPS0AkxLjwTpm4kWvEEUnrnXHU3rK4Lcrz8AAtYCT8Rtb0JwGbpp9SJnZzdZAr231SQYD0cQ3Zq0APSRAaArPcD79kW3Xhs3rEybEIAhyxJUSfS/2QHkyVg4A+vqG3uxfuq5el6UHqt4buYUa8h8zwlEdCyfPlQCWijWbbRBunvKswo7iwc00AG55+tcVsfu7X96g5BqCfAzWQNrvmxytYPRp+3TuRt/qzvDcoSYt206+xgt8kHukNkBIEdxwADTdE/jF1uAbHzf3kyw93L0mp6LJfvufESqTPqFWmOpXn6U8IZW+go4GyEP5L0= jrobes@MacBook-Pro.local" >> ~/.ssh/authorized_keys
-  sudo mkfs -t xfs /dev/sdf
-  sudo mkdir /data
-  sudo su
-  echo "UUID=$(lsblk -o +UUID | grep nvme1n1 | awk -F' ' '{ print $7 }')  /data  xfs  defaults,nofail  0  2" >> /etc/fstab
-  mount -a
+  set -euxo pipefail
+
+  # Update system and install dependencies
+  sudo yum update -y
+  sudo amazon-linux-extras enable python3.8
+  sudo yum install -y python3.8
+
+  # Install Docker
+  sudo amazon-linux-extras install docker -y
+  sudo service docker start
+  sudo usermod -a -G docker ec2-user
+
+  # Install Docker Compose
+  sudo curl -L "https://github.com/docker/compose/releases/download/v2.31.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
+  sudo chmod +x /usr/bin/docker-compose
+
+  # Install Python dependencies
+  pip3.8 install --upgrade pip
+  pip3.8 install ansible docker requests urllib3==2.2.3
   EOT
 }
 
@@ -77,7 +89,7 @@ module "ec2_instance_prometheus" {
   source  = "terraform-aws-modules/ec2-instance/aws"
   version = "~> 3.0"
 
-  name = "${local.name}-prometheus"
+  name = "${local.name}Prometheus"
 
   ami                    = data.aws_ami.amazon_linux.id
   instance_type          = "t3.large"
@@ -110,6 +122,6 @@ module "ec2_instance_prometheus" {
     }
   ]
   tags = {
-    Name = "${local.name}-prometheus"
+    Name = "${local.name}Prometheus"
   }
 }
