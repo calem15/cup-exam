@@ -1,10 +1,8 @@
 provider "aws" {
-    profile = var.aws_profile
     region = var.aws_region
     default_tags {
         tags = {
             SOURCE = "PLATFORM"
-            ENVIRONMENT = "${terraform.workspace}"
             TERRAFORM = "true"
             PROJECT = "INFRA"
             KEY = "PLATFORM"
@@ -15,11 +13,10 @@ provider "aws" {
 terraform {
   required_version = ">= 0.12"
   backend "s3" {
-    profile = "omp-prod"
-    bucket = "omp-infratf.tfstate"
+    bucket = "cup-terraform-test.tfstate"
     key = "platform"
-    workspace_key_prefix = "us-east-2/env"
-    region = "us-east-2"
+    workspace_key_prefix = "us-east-1/env"
+    region = "us-east-1"
   }
 }
 
