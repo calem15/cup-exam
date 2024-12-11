@@ -79,7 +79,6 @@ jobs:
 
       - name: Preparing Stack deployment
         run: |
-          cd ansible
           mkdir -p ~/.ssh
           echo "$ANSIBLE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
@@ -90,6 +89,7 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
+            cd ansible
             ansible-playbook monitoring.yaml --check
         env:
             ANSIBLE_HOST_KEY_CHECKING: 'false'
