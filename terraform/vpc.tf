@@ -1,5 +1,4 @@
 module "main_vpc" {
-  # source = "terraform-aws-modules/vpc/aws"
   source = "terraform-aws-modules/vpc/aws"
   name = "cup-vpc-test"
   cidr = var.cidr_block
