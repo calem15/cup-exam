@@ -15,7 +15,7 @@ variable "cidr_block" {
 }
 
 variable "aws_azones" {
-    type = string
+    type = list(string)
     description = "AWS Availability Zones"
 }
 
