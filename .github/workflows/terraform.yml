@@ -100,4 +100,4 @@ jobs:
             ANSIBLE_SSH_PRIVATE_KEY: ${{ secrets.ANSIBLE_SSH_PRIVATE_KEY }}
             AWS_ACCESS_KEY_ID: ${{ secrets.NONPROD_AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.NONPROD_AWS_SECRET_ACCESS_KEY }}
-            AWS_DEFAULT_REGION: 'us-east-2'
+            AWS_DEFAULT_REGION: 'us-east-1'
